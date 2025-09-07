@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Thank You</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Stylish&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #e0ffff;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background: linear-gradient(135deg, #98FF98, #B0E0E6);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 320px;
+        }
+        .event-image {
+            width: 120px;
+            height: 120px;
+            border: 3px solid rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            margin-bottom: 10px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .title {
+            color: #0000ff;
+            font-size: 24px;
+            font-family: "Orbitron", sans-serif;
+            font-weight: bolder;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #008000;
+            font-size: 22px;
+            font-family: "Stylish", sans-serif;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .description {
+            color: #333333;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+        .claim-button {
+            background-color: #32CD32;
+            color: #000000;
+            padding: 9px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s, transform 0.1s;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            
+        }
+
+        .claim-button:active {
+            background-color: #228B22;
+            transform: scale(0.9);
+        }
+        
+        
+        .claim-button::after {
+         content: '';
+         position: absolute;
+         top: -50%;
+         left: -50%;
+         width: 200%;
+         height: 200%;
+         background: linear-gradient(to bottom right, rgba(255,255,255,0.25), rgba(255,255,255,0.0));
+         
+        transform: rotate(45deg);
+        animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        
+
+        
+        
+        #time-remaining {
+            font-size: 20px;
+            font-family: "Stylish", sans-serif;
+            font-weight: bold;
+            margin-top: 15px;
+            color: navy;
+            text-transform: uppercase;
+        }
+        #countdown {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .time-box {
+            font-size: 18px;
+            font-weight: bolder;
+            padding: 10px 5px;
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            width: 40px;
+        }
+        #days { background-color: #FF4500; }
+        #hours { background-color: #32CD32; }
+        #minutes { background-color: #FFCA28; }
+        #seconds { background-color: #1E90FF; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="img.jpg" alt="Event Image" class="event-image">
+        <h1 class="title">SPECIAL EVENT!</h1>
+        <p class="subtitle" id="subtitle"></p>
+        <p class="description" id="description"></p>
+        <a href="#" class="claim-button">CLAIM NOW</a>
+
+        <div id="time-remaining">Time Remaining</div>
+        <div id="countdown">
+            <div id="days" class="time-box">00</div>
+            <div id="hours" class="time-box">00</div>
+            <div id="minutes" class="time-box">00</div>
+            <div id="seconds" class="time-box">00</div>
+        </div>
+    </div>
+
+    <script>
+    // Generate random prize between 100 and 10000 with rounding (steps of 50)
+    function getRandomPrize() {
+        let min = 100, max = 1500, step = 50;
+        let random = Math.floor(Math.random() * ((max - min) / step + 1)) * step + min;
+        return random;
+    }
+
+    // Format number with commas
+    function formatMoney(num) {
+        return "$" + num.toLocaleString();
+    }
+
+    // Typewriter effect
+    function typeWriter(text, elementId, speed = 50) {
+        let i = 0;
+        function typing() {
+            if (i < text.length) {
+                document.getElementById(elementId).innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typing, speed);
+            }
+        }
+        typing();
+    }
+
+    // Countdown timer
+    function startCountdown(duration) {
+        let timer = duration, days, hours, minutes, seconds;
+        setInterval(function () {
+            days = parseInt(timer / 86400, 10);
+            hours = parseInt((timer % 86400) / 3600, 10);
+            minutes = parseInt((timer % 3600) / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
+    }
+
+    // On page load
+    window.onload = function () {
+        let prize = getRandomPrize();
+        document.getElementById("subtitle").innerText = "You win " + formatMoney(prize);
+
+        let description = `Congratulations!! You win ${formatMoney(prize)} at my event!! Complete the survey and Register by clicking the Claim Now button below, and your gift will be unlocked automatically! Don't miss it!`;
+        typeWriter(description, "description", 40);
+
+        let timeInSeconds = 3 * 3600 + 24 * 60 + 42; // 3 hours 24 minutes 42 seconds
+        startCountdown(timeInSeconds);
+    };
+    </script>
+</body>
+</html>
